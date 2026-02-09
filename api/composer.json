@@ -1,0 +1,21 @@
+{
+    "name": "motorgas/api",
+    "description": "MotorGAs Technician & Admin API",
+    "type": "project",
+    "require": {
+        "dompdf/dompdf": "^3.0",
+        "cloudinary/cloudinary_php": "^2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Config\\": "config/",
+            "Controllers\\": "controllers/",
+            "Core\\": "core/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Benjamin Okwama"
+        }
+    ]
+}

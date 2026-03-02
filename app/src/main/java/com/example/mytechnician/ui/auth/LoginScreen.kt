@@ -105,6 +105,30 @@ fun LoginScreen(
                 enabled = !uiState.isLoading
             )
             
+            // Remember Me Row
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    checked = uiState.rememberMe,
+                    onCheckedChange = viewModel::onRememberMeChange,
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = PrimaryGreen,
+                        uncheckedColor = Color.White.copy(alpha = 0.5f)
+                    ),
+                    enabled = !uiState.isLoading
+                )
+                Text(
+                    text = "Remember Me",
+                    color = Color.White,
+                    modifier = Modifier.padding(start = 8.dp),
+                    fontSize = 14.sp
+                )
+            }
+            
             // Error Message
             if (uiState.errorMessage != null) {
                 Text(

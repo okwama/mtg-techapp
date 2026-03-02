@@ -16,14 +16,11 @@ class Router {
     public function dispatch() {
         $method = $_SERVER['REQUEST_METHOD'];
         $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-        
-        // Remove 'api/public/index.php' or base folder from URI if present
         $uri = str_replace('/api/public', '', $uri);
 
         foreach ($this->routes as $route) {
-            $pattern = str_replace('/', '\/', $route['path']);
-            $pattern = preg_replace('/\{(\w+)\}/', '(?P<$1>[^/]+)', $pattern);
-            $pattern = '/^' . $pattern . '/'; // Match prefix for potential sub-resources
+            $pattern = preg_replace('/\{(\w+)\}/', '(?P<$1>[^/]+)', $route['path']);
+            $pattern = '#^' . $pattern . '/?$#';
 
             if ($route['method'] === $method && preg_match($pattern, $uri, $matches)) {
                 // Execute Middleware

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 05, 2026 at 04:11 PM
+-- Generation Time: Feb 12, 2026 at 10:12 AM
 -- Server version: 10.6.24-MariaDB-cll-lve
 -- PHP Version: 8.4.17
 
@@ -179,7 +179,7 @@ CREATE TABLE `conversions` (
 --
 
 INSERT INTO `conversions` (`id`, `owner_full_name`, `national_id`, `passport_id`, `contact`, `email`, `vehicle_registration`, `make`, `model`, `year_of_manufacture`, `engine_capacity`, `vin_chassis_number`, `current_fuel_type`, `logbook_number`, `scheduled_date`, `status`, `comment`, `conversion_description`, `conversion_date`, `created_by`, `created_at`, `updated_at`) VALUES
-(1, 'new owner', '44', '33', '0790193625', 'bryanotieno09@gmail.com', 'KDG 111A', 'Toyota', 'Camry', 2024, 2000, '21334', 'petrol', 'asss1234', '2025-12-08 10:33:00', 'completed', 'approvedmm', NULL, NULL, NULL, '2025-12-07 10:18:24', '2025-12-07 12:37:52'),
+(1, 'new owner', '44', '33', '0790193625', 'bryanotieno09@gmail.com', 'KDG 111A', 'Toyota', 'Camry', 2024, 2000, '21334', 'petrol', 'asss1234', '2025-12-08 10:33:00', 'pending', 'approvedmm', NULL, NULL, NULL, '2025-12-07 10:18:24', '2026-02-11 19:53:59'),
 (2, 'Jane Smith', '12345678', '35456789', '0712345678', 'bryanotieno09@gmail.com', 'KDA 222B', 'Toyota', 'Vits', 2017, 1300, '1111', 'petrol', 'ass1223', '2025-12-10 15:50:00', 'completed', '', NULL, NULL, NULL, '2025-12-07 12:39:26', '2026-01-15 08:07:33'),
 (3, 'Jane Smith', '12345678', '35456789', '0790193625', 'bryanotieno09@gmail.com', 'KDG 111A', 'Toyota', 'Camry', 2024, 2000, '12334', 'petrol', 'asss1234', '2026-01-16 10:00:00', 'completed', 's', 'nnn', '2026-01-16', NULL, '2026-01-14 10:40:46', '2026-01-16 13:28:02'),
 (4, 'Jane Smith', '455', '5678', '254702975604', 'bryanotieno09@gmail.com', 'KDG 111A', 'Toyota', 'Camry', 2020, 2000, 'df44', 'petrol', 'dee4', '2026-01-16 16:35:00', 'completed', 'c', 's', '2026-01-16', NULL, '2026-01-15 09:53:16', '2026-01-16 13:34:01'),
@@ -279,8 +279,9 @@ CREATE TABLE `inspections` (
   `id` int(11) NOT NULL,
   `inspection_number` varchar(50) NOT NULL,
   `ticket_id` int(11) DEFAULT NULL,
+  `conversion_id` int(11) DEFAULT NULL,
   `technician_id` int(11) NOT NULL,
-  `vehicle_id` int(11) NOT NULL,
+  `vehicle_id` int(11) DEFAULT NULL,
   `station_id` int(11) NOT NULL,
   `status` enum('pending','in-progress','completed','approved','rejected') DEFAULT 'pending',
   `checklist_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`checklist_data`)),
@@ -291,6 +292,13 @@ CREATE TABLE `inspections` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `inspections`
+--
+
+INSERT INTO `inspections` (`id`, `inspection_number`, `ticket_id`, `conversion_id`, `technician_id`, `vehicle_id`, `station_id`, `status`, `checklist_data`, `summary`, `overall_condition`, `admin_comments`, `inspection_date`, `created_at`, `updated_at`) VALUES
+(1, 'INS-20260211-2890', NULL, 1, 23, NULL, 1, 'completed', '[{\"name\":\"Test Drive\",\"items\":[{\"id\":\"td_1\",\"name\":\"Engine Performance\",\"condition\":\"Good\"},{\"id\":\"td_2\",\"name\":\"Road Handling\",\"condition\":\"Good\"},{\"id\":\"td_3\",\"name\":\"Braking\",\"condition\":\"Good\"},{\"id\":\"td_4\",\"name\":\"Steering\\/Alignment\",\"condition\":\"Good\"},{\"id\":\"td_5\",\"name\":\"Transmission Shifting\",\"condition\":\"Good\"}]},{\"name\":\"Exterior Inspection\",\"items\":[{\"id\":\"ext_1\",\"name\":\"Paint Finish\",\"condition\":\"Good\"},{\"id\":\"ext_2\",\"name\":\"Body Damage\",\"condition\":\"Good\"},{\"id\":\"ext_3\",\"name\":\"Rust\",\"condition\":\"Good\"},{\"id\":\"ext_4\",\"name\":\"Windshield\\/Glass\",\"condition\":\"Good\"},{\"id\":\"ext_5\",\"name\":\"Headlights\\/Turn Signals\",\"condition\":\"Good\"}]},{\"name\":\"Electrical System\",\"items\":[{\"id\":\"elec_1\",\"name\":\"Battery\",\"condition\":\"Good\"},{\"id\":\"elec_2\",\"name\":\"Instrument Gauges\",\"condition\":\"Good\"},{\"id\":\"elec_3\",\"name\":\"Air Conditioning\",\"condition\":\"Good\"},{\"id\":\"elec_4\",\"name\":\"Heater Operation\",\"condition\":\"Good\"},{\"id\":\"elec_5\",\"name\":\"Wiper System\",\"condition\":\"Good\"}]},{\"name\":\"Under The Hood\",\"items\":[{\"id\":\"uth_1\",\"name\":\"Fluid Levels\",\"condition\":\"Good\"},{\"id\":\"uth_2\",\"name\":\"Hoses\",\"condition\":\"Good\"},{\"id\":\"uth_3\",\"name\":\"Belts\",\"condition\":\"Good\"},{\"id\":\"uth_4\",\"name\":\"Air Filter\",\"condition\":\"Good\"},{\"id\":\"uth_5\",\"name\":\"Radiator\",\"condition\":\"Good\"}]}]', 'nothing ', 'good', NULL, '2026-02-11 22:32:27', '2026-02-11 20:32:27', '2026-02-12 07:57:48');
 
 -- --------------------------------------------------------
 
@@ -422,7 +430,7 @@ CREATE TABLE `KeyAccounts` (
   `contact` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `account_number` varchar(100) NOT NULL,
-  `fuel_price` decimal(11,2) NOT NULL,
+  `fuel_price` decimal(11,2) DEFAULT NULL,
   `type` enum('client','key_account') NOT NULL DEFAULT 'key_account',
   `description` text DEFAULT NULL,
   `region` varchar(191) DEFAULT NULL,
@@ -430,18 +438,21 @@ CREATE TABLE `KeyAccounts` (
   `loyalty_points` decimal(15,2) NOT NULL DEFAULT 0.00,
   `balance` decimal(15,2) NOT NULL DEFAULT 0.00,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `client_type` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `KeyAccounts`
 --
 
-INSERT INTO `KeyAccounts` (`id`, `name`, `email`, `contact`, `password`, `account_number`, `fuel_price`, `type`, `description`, `region`, `is_active`, `loyalty_points`, `balance`, `created_at`, `updated_at`) VALUES
-(1, 'Client 1', 'bryanotieno09@gmail.com', '0790193625', '', 'ASL001', 0.00, 'key_account', 'testing', NULL, 1, 0.00, 408.00, '2025-12-06 19:44:18', '2026-01-16 16:17:31'),
-(2, 'BRYAN OTIENO ONYANGO', 'bryanotieno09@gmail.com', '+254702476974', '', 'CLT-1765642651619-0776', 99.00, 'client', 'Nairobi\nBranton Court', 'Nairobi', 1, 320.00, 6216.00, '2025-12-13 16:17:29', '2026-01-22 12:40:54'),
-(3, 'BENJAMIN OKWAMA', 'bryanotieno09@gmail.com', '07999', '', 'CLT-1765645110412-6332', 101.00, 'client', 'bb', 'Nairobi', 1, 70.00, 693.00, '2025-12-13 16:58:28', '2026-01-22 12:40:00'),
-(4, 'Test Client', 'bryanotieno09@gmail.com', '0790193625', '', 'AA111', 0.00, 'key_account', 'Test', NULL, 1, 0.00, 0.00, '2026-01-17 08:26:30', '2026-01-17 08:26:30');
+INSERT INTO `KeyAccounts` (`id`, `name`, `email`, `contact`, `password`, `account_number`, `fuel_price`, `type`, `description`, `region`, `is_active`, `loyalty_points`, `balance`, `created_at`, `updated_at`, `client_type`) VALUES
+(1, 'Client 1', 'bryanotieno09@gmail.com', '0790193625', '', 'ASL001', 0.00, 'key_account', 'testing', NULL, 1, 0.00, 408.00, '2025-12-06 19:44:18', '2026-02-11 12:05:32', 'Drive-in'),
+(2, 'BRYAN OTIENO ONYANGO', 'bryanotieno09@gmail.com', '+254702476974', '', 'CLT-1765642651619-0776', 99.00, 'client', 'Nairobi\nBranton Court', 'Nairobi', 1, 320.00, 12431.00, '2025-12-13 16:17:29', '2026-02-11 12:58:21', 'FSA'),
+(3, 'BENJAMIN OKWAMA', 'bryanotieno09@gmail.com', '07999', '', 'CLT-1765645110412-6332', 101.00, 'client', 'bb', 'Nairobi', 1, 70.00, 693.00, '2025-12-13 16:58:28', '2026-02-11 12:01:52', 'FSA'),
+(4, 'Test Client', 'bryanotieno09@gmail.com', '0790193625', '', 'AA111', 0.00, 'key_account', 'Test', NULL, 1, 0.00, 0.00, '2026-01-17 08:26:30', '2026-02-11 12:05:41', 'Drive-in'),
+(7, 'nnddd', 's@gmail.com', 's2', '', '233', NULL, 'key_account', 's', NULL, 1, 0.00, 0.00, '2026-02-11 12:54:41', '2026-02-11 12:54:41', NULL),
+(8, 'newest1', 'bryanotieno09@gmail.com', '254702975604', '', 'n', NULL, 'key_account', 'm', NULL, 1, 0.00, 0.00, '2026-02-11 12:56:22', '2026-02-11 12:56:22', 'FSA');
 
 -- --------------------------------------------------------
 
@@ -487,7 +498,15 @@ INSERT INTO `key_account_ledger` (`id`, `key_account_id`, `vehicle_id`, `station
 (10, 3, 3, 2, '2026-01-15', 'SALE', 7.00, 99.00, 693.00, 693.00, 0.00, 693.00, 'SALE-KA-3-V-3', 'Sale: 7.00L @ 99.00 per liter', NULL, 21, '2026-01-15 07:56:37', '2026-01-15 07:56:37'),
 (11, 2, 2, 1, '2026-01-16', 'SALE', 4.00, 102.00, 408.00, 408.00, 0.00, 6216.00, 'SALE-KA-2-V-2', 'Sale: 4.00L @ 102.00 per liter', 'd', 22, '2026-01-16 16:19:42', '2026-01-16 16:19:42'),
 (12, 2, 2, 1, '2026-01-16', 'SALE', 5.00, 102.00, 510.00, 510.00, 0.00, 6726.00, 'SALE-KA-2-V-2', 'Sale: 5.00L @ 102.00 per liter', 'test', 22, '2026-01-16 16:23:05', '2026-01-16 16:23:05'),
-(13, 2, 2, 1, '2026-01-16', 'PAYMENT', 0.00, 0.00, 510.00, 0.00, 510.00, 6216.00, 'SALE-KA-2-V-2-PAYMENT', 'Payment via Cash for sale: 5.00L @ 102.00 per liter', 'Payment method: Cash - test', 22, '2026-01-16 16:23:05', '2026-01-16 16:23:05');
+(13, 2, 2, 1, '2026-01-16', 'PAYMENT', 0.00, 0.00, 510.00, 0.00, 510.00, 6216.00, 'SALE-KA-2-V-2-PAYMENT', 'Payment via Cash for sale: 5.00L @ 102.00 per liter', 'Payment method: Cash - test', 22, '2026-01-16 16:23:05', '2026-01-16 16:23:05'),
+(14, 2, 2, 1, '2026-02-07', 'SALE', 155.00, 25.00, 3875.00, 3875.00, 0.00, 10091.00, 'SALE-ST-1-KA-2-V-000022', 'Fuel sale', NULL, 24, '2026-02-07 17:24:30', '2026-02-07 17:24:30'),
+(15, 2, 2, 1, '2026-02-07', 'SALE', 12.60, 100.00, 1260.00, 1260.00, 0.00, 11351.00, 'SALE-ST-1-KA-2-V-000023', 'Fuel sale', NULL, 24, '2026-02-07 17:27:27', '2026-02-07 17:27:27'),
+(16, 2, 2, 1, '2026-02-07', 'PAYMENT', 0.00, 0.00, 1260.00, 0.00, 1260.00, 10091.00, 'SALE-ST-1-KA-2-V-000023', 'Payment received (M-PESA)', NULL, 24, '2026-02-07 17:27:27', '2026-02-07 17:27:27'),
+(17, 2, 2, 1, '2026-02-07', 'SALE', 15.00, 99.00, 1485.00, 1485.00, 0.00, 11576.00, 'SALE-ST-1-KA-2-V-000024', 'Fuel sale', NULL, 24, '2026-02-07 17:30:20', '2026-02-07 17:30:20'),
+(18, 2, 2, 1, '2026-02-07', 'PAYMENT', 0.00, 0.00, 1485.00, 0.00, 1485.00, 10091.00, 'SALE-ST-1-KA-2-V-000024', 'Payment received (M-PESA)', NULL, 24, '2026-02-07 17:30:20', '2026-02-07 17:30:20'),
+(19, 2, 2, 1, '2026-02-07', 'SALE', 11.70, 200.00, 2340.00, 2340.00, 0.00, 12431.00, 'SALE-ST-1-KA-2-V-000025', 'Fuel sale', NULL, 24, '2026-02-07 17:35:49', '2026-02-07 17:35:49'),
+(20, 2, 2, 1, '2026-02-09', 'SALE', 1.00, 225.00, 225.00, 225.00, 0.00, 12656.00, 'SALE-ST-1-KA-2-V-000026', 'Fuel sale', NULL, 24, '2026-02-09 10:07:05', '2026-02-09 10:07:05'),
+(21, 2, 2, 1, '2026-02-09', 'PAYMENT', 0.00, 0.00, 225.00, 0.00, 225.00, 12431.00, 'SALE-ST-1-KA-2-V-000026', 'Payment received (M-PESA)', NULL, 24, '2026-02-09 10:07:05', '2026-02-09 10:07:05');
 
 -- --------------------------------------------------------
 
@@ -871,7 +890,7 @@ CREATE TABLE `sales` (
   `quantity` decimal(10,2) NOT NULL,
   `unit_price` decimal(10,2) NOT NULL,
   `total_amount` decimal(15,2) NOT NULL,
-  `payment_method` enum('cash','card','mobile_money','credit','other') DEFAULT NULL,
+  `payment_method` enum('CASH','CARD','M-PESA','CREDIT','other') DEFAULT NULL,
   `sale_date` datetime NOT NULL,
   `reference_number` varchar(255) DEFAULT NULL,
   `notes` text DEFAULT NULL,
@@ -895,14 +914,22 @@ INSERT INTO `sales` (`id`, `station_id`, `client_type`, `key_account_id`, `vehic
 (6, 1, 'key_account', 2, 2, 3.00, 102.00, 306.00, NULL, '2026-01-15 10:26:09', 'SALE-KA-2-V-2', NULL, NULL, '2026-01-15 07:26:09', '2026-01-15 07:26:09', 'completed', NULL, NULL, 'auto'),
 (7, 1, 'key_account', 2, 2, 40.00, 102.00, 4080.00, NULL, '2026-01-15 10:40:43', 'SALE-KA-2-V-2', 'test', 22, '2026-01-15 07:40:43', '2026-01-15 07:40:43', 'completed', NULL, NULL, 'auto'),
 (8, 2, 'key_account', 3, 3, 7.00, 99.00, 693.00, NULL, '2026-01-15 10:56:36', 'SALE-KA-3-V-3', NULL, 21, '2026-01-15 07:56:36', '2026-01-15 07:56:36', 'completed', NULL, NULL, 'auto'),
-(9, 1, 'regular', NULL, NULL, 1.00, 102.00, 102.00, 'mobile_money', '2026-01-16 17:18:52', 'SALE-REGULAR', NULL, 22, '2026-01-16 14:18:52', '2026-01-16 14:18:52', 'completed', NULL, NULL, 'auto'),
-(10, 1, 'regular', NULL, NULL, 2.00, 102.00, 204.00, 'card', '2026-01-16 17:23:34', 'SALE-REGULAR', NULL, 22, '2026-01-16 14:23:33', '2026-01-16 14:23:33', 'completed', NULL, NULL, 'auto'),
-(11, 1, 'key_account', 2, 2, 4.00, 102.00, 408.00, 'cash', '2026-01-16 19:19:41', 'SALE-KA-2-V-2', 'd', 22, '2026-01-16 16:19:41', '2026-01-16 16:19:41', 'completed', NULL, NULL, 'auto'),
-(12, 1, 'key_account', 2, 2, 5.00, 102.00, 510.00, 'cash', '2025-08-01 19:23:05', 'SALE-KA-2-V-2', 'test', 22, '2026-01-16 16:23:04', '2026-01-16 17:08:17', 'completed', NULL, NULL, 'auto'),
+(9, 1, 'regular', NULL, NULL, 1.00, 102.00, 102.00, '', '2026-01-16 17:18:52', 'SALE-REGULAR', NULL, 22, '2026-01-16 14:18:52', '2026-01-16 14:18:52', 'completed', NULL, NULL, 'auto'),
+(10, 1, 'regular', NULL, NULL, 2.00, 102.00, 204.00, 'CARD', '2026-01-16 17:23:34', 'SALE-REGULAR', NULL, 22, '2026-01-16 14:23:33', '2026-01-16 14:23:33', 'completed', NULL, NULL, 'auto'),
+(11, 1, 'key_account', 2, 2, 4.00, 102.00, 408.00, 'CASH', '2026-01-16 19:19:41', 'SALE-KA-2-V-2', 'd', 22, '2026-01-16 16:19:41', '2026-01-16 16:19:41', 'completed', NULL, NULL, 'auto'),
+(12, 1, 'key_account', 2, 2, 5.00, 102.00, 510.00, 'CASH', '2025-08-01 19:23:05', 'SALE-KA-2-V-2', 'test', 22, '2026-01-16 16:23:04', '2026-01-16 17:08:17', 'completed', NULL, NULL, 'auto'),
 (13, 1, 'key_account', 1, NULL, 22.00, 102.00, 2244.00, NULL, '2026-01-16 21:33:38', 'SALE-20260116-1-1-1768588418', NULL, 23, '2026-01-16 18:33:38', '2026-01-16 18:33:38', 'completed', NULL, NULL, 'auto'),
 (14, 1, 'key_account', 2, NULL, 25.00, 102.00, 2550.00, NULL, '2026-01-16 22:20:07', 'SALE-20260116-1-2-1768591207', NULL, 23, '2026-01-16 19:20:07', '2026-01-16 19:20:07', 'completed', NULL, NULL, 'auto'),
 (15, 1, 'key_account', 2, NULL, 12.00, 102.00, 1224.00, NULL, '2026-01-16 22:22:16', 'SALE-20260116-1-2-1768591336', NULL, 23, '2026-01-16 19:22:16', '2026-01-16 19:22:16', 'completed', NULL, NULL, 'auto'),
-(16, 1, 'key_account', 4, NULL, 255.00, 102.00, 26010.00, NULL, '2026-01-17 15:25:46', 'SALE-20260117-1-4-1768652746', NULL, 23, '2026-01-17 12:25:46', '2026-01-17 12:25:46', 'completed', NULL, NULL, 'auto');
+(16, 1, 'key_account', 4, NULL, 255.00, 102.00, 26010.00, NULL, '2026-01-17 15:25:46', 'SALE-20260117-1-4-1768652746', NULL, 23, '2026-01-17 12:25:46', '2026-01-17 12:25:46', 'completed', NULL, NULL, 'auto'),
+(17, 1, 'key_account', 3, 3, 1.00, 2.00, 2.00, NULL, '2026-02-05 05:25:16', 'ref', NULL, 24, '2026-02-05 03:25:16', '2026-02-05 03:25:16', 'completed', NULL, NULL, 'auto'),
+(18, 1, 'key_account', 2, 2, 19.20, 300.00, 5760.00, NULL, '2026-02-05 05:30:19', 'ref', NULL, 24, '2026-02-05 03:30:19', '2026-02-05 03:30:19', 'completed', NULL, NULL, 'auto'),
+(21, 1, 'key_account', 3, 3, 1.00, 63.00, 63.00, 'M-PESA', '2026-02-07 20:16:27', 'SALE-ST-1-KA-3-V-000021', NULL, 24, '2026-02-07 18:16:27', '2026-02-07 17:16:27', 'completed', NULL, NULL, 'auto'),
+(22, 1, 'key_account', 2, 2, 155.00, 25.00, 3875.00, 'CASH', '2026-02-07 20:24:30', 'SALE-ST-1-KA-2-V-000022', NULL, 24, '2026-02-07 18:24:30', '2026-02-07 17:24:30', 'completed', NULL, NULL, 'auto'),
+(23, 1, 'key_account', 2, 2, 12.60, 100.00, 1260.00, 'M-PESA', '2026-02-07 20:27:27', 'SALE-ST-1-KA-2-V-000023', NULL, 24, '2026-02-07 18:27:27', '2026-02-07 17:27:27', 'completed', NULL, NULL, 'auto'),
+(24, 1, 'key_account', 2, 2, 15.00, 99.00, 1485.00, 'M-PESA', '2026-02-07 20:30:20', 'SALE-ST-1-KA-2-V-000024', NULL, 24, '2026-02-07 18:30:20', '2026-02-07 17:30:20', 'completed', NULL, NULL, 'auto'),
+(25, 1, 'key_account', 2, 2, 11.70, 200.00, 2340.00, 'CREDIT', '2026-02-07 20:35:49', 'SALE-ST-1-KA-2-V-000025', NULL, 24, '2026-02-07 18:35:49', '2026-02-07 17:35:49', 'completed', NULL, NULL, 'auto'),
+(26, 1, 'key_account', 2, 2, 1.00, 225.00, 225.00, 'M-PESA', '2026-02-09 13:07:05', 'SALE-ST-1-KA-2-V-000026', NULL, 24, '2026-02-09 11:07:05', '2026-02-09 10:07:05', 'completed', NULL, NULL, 'auto');
 
 -- --------------------------------------------------------
 
@@ -964,7 +991,9 @@ INSERT INTO `shifts` (`id`, `date`, `time`, `userId`, `userName`, `station_id`, 
 (10, '2026-01-26 09:02:29.000', '', 22, 'BRYAN OTIENO ONYANGO', 1, 'Kisumu Station 1', 2, '2026-01-26 21:22:40.000', -1.2312445, 36.8839172, NULL, NULL, NULL, NULL, NULL, 1, NULL, '', '', 'QV9M+FGM, Nairobi, Kenya', ''),
 (11, '2026-01-27 07:37:45.000', '', 22, 'BRYAN OTIENO ONYANGO', 1, 'Kisumu Station 1', 2, '2026-01-27 08:02:00.000', -1.231243, 36.883921, NULL, NULL, NULL, NULL, '2026-01-27 10:02:00.000', 1, NULL, '', '', 'QV9M+FGM, Nairobi, Kenya', ''),
 (12, '2026-02-05 10:05:24.000', '', 22, 'BRYAN OTIENO ONYANGO', 1, 'Kisumu Station 1', 2, '2026-02-05 10:09:05.000', -1.3008913, 36.7777615, NULL, NULL, NULL, NULL, NULL, 1, NULL, '', '', 'MQXH+J2X, Ndemi Ln, Nairobi, Kenya', '2026-02-05'),
-(14, '2026-02-05 01:08:48.000', '', 24, 'manager 1', 1, 'Kisumu Station 1', 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '', '', '', '');
+(14, '2026-02-05 01:08:48.000', '', 24, 'manager 1', 1, 'Kisumu Station 1', 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '', '', '', ''),
+(15, '2026-02-09 01:07:21.000', '', 24, 'manager 1', 1, 'Kisumu Station 1', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '', '', '', ''),
+(16, '2026-02-10 01:29:56.000', '', 22, 'BRYAN OTIENO ONYANGO', 1, 'Kisumu Station 1', 0, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -1023,7 +1052,7 @@ CREATE TABLE `staff` (
 
 INSERT INTO `staff` (`id`, `name`, `photo_url`, `empl_no`, `id_no`, `role`, `designation`, `phone_number`, `password`, `department`, `department_id`, `business_email`, `department_email`, `salary`, `employment_type`, `gender`, `station_id`, `stationss`, `manager_id`, `created_at`, `updated_at`, `is_active`, `avatar_url`, `status`) VALUES
 (9, 'admins', 'https://res.cloudinary.com/otienobryan/image/upload/v1757252591/uploads/wsxidqwfmgy8ib5tic1m.jpg', '123355', '9', 'executive', 0, '55', '$2a$10$me0dzhAfGglEGPhcK/34BuWmhYW3USYy3SeMbe46CQop102Yq./1S', 'Executive', 3, 'admin@gas.com', 'admin@gas.com', NULL, 'Contract', 'Male', NULL, NULL, NULL, '2025-07-19 12:38:19', '2026-01-23 16:54:53', 1, 'https://via.placeholder.com/150', 1),
-(20, 's', 'https://res.cloudinary.com/otienobryan/image/upload/v1764762270/staff/mslbalzdvw4uznscynol.jpg', '2', '3', 's', 0, '55', '$2a$10$me0dzhAfGglEGPhcK/34BuWmhYW3USYy3SeMbe46CQop102Yq./1S', 'Business Development', 3, NULL, NULL, NULL, 'Contract', 'Male', NULL, NULL, NULL, '2025-12-03 11:44:31', '2026-01-22 11:55:40', 1, 'https://via.placeholder.com/150', 1),
+(20, 's', 'https://res.cloudinary.com/otienobryan/image/upload/v1764762270/staff/mslbalzdvw4uznscynol.jpg', '2', '3', 's', 0, '55', '$2a$10$me0dzhAfGglEGPhcK/34BuWmhYW3USYy3SeMbe46CQop102Yq./1S', 'Business Development', 3, 'amarah@motorgas.africa', NULL, NULL, 'Contract', 'Male', NULL, NULL, NULL, '2025-12-03 11:44:31', '2026-02-11 13:24:36', 1, 'https://via.placeholder.com/150', 1),
 (21, 'test', 'https://res.cloudinary.com/otienobryan/image/upload/v1765005297/staff/plpal99p6ayv4juqbclt.png', 't', '44', '', 0, '', '$2a$10$me0dzhAfGglEGPhcK/34BuWmhYW3USYy3SeMbe46CQop102Yq./1S', 'Reservations', 3, NULL, NULL, NULL, 'Contract', 'Male', NULL, NULL, NULL, '2025-12-03 11:54:48', '2025-12-06 07:14:57', 1, 'https://via.placeholder.com/150', 1),
 (22, 'BRYAN OTIENO ONYANGO', 'https://via.placeholder.com/150', 'EMPL12356779', '3322', 'attendant', 0, '0790193625', '$2b$10$n0rsM50QpFHZTd0UT2fgOe0B8RzASVcI2U4lj8VYM3NWqP/q3Irxm', '2025-12-06', NULL, NULL, NULL, NULL, 'Contract', 'Male', 1, 1, NULL, '2025-12-06 17:44:48', '2026-01-23 16:40:14', 1, 'https://via.placeholder.com/150', 1),
 (23, 'Benjamin Okwama', 'https://via.placeholder.com/150', '340114563', '466', 'attendant', 0, '0711376366', '$2b$10$n0rsM50QpFHZTd0UT2fgOe0B8RzASVcI2U4lj8VYM3NWqP/q3Irxm', '2025-12-06', NULL, NULL, NULL, NULL, 'Contract', 'Male', 1, 2, NULL, '2025-12-06 17:47:24', '2026-01-23 16:40:21', 1, 'https://via.placeholder.com/150', 1),
@@ -1125,6 +1154,21 @@ CREATE TABLE `technical_logs` (
   `ip_address` varchar(45) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `technical_logs`
+--
+
+INSERT INTO `technical_logs` (`id`, `user_id`, `action`, `resource_type`, `resource_id`, `old_value`, `new_value`, `details`, `ip_address`, `created_at`) VALUES
+(1, 23, 'INSPECTION_STARTED', 'inspection', 1, NULL, NULL, 'Inspection started for Conversion 1', '192.168.0.112', '2026-02-11 20:32:27'),
+(2, 23, 'INSPECTION_UPDATED', 'inspection', 1, NULL, '{\"summary\":\"nothing \",\"overall_condition\":\"Good\",\"checklist_data\":[{\"name\":\"Test Drive\",\"items\":[{\"id\":\"td_1\",\"name\":\"Engine Performance\",\"condition\":\"Good\"},{\"id\":\"td_2\",\"name\":\"Road Handling\",\"condition\":\"Good\"},{\"id\":\"td_3\",\"name\":\"Braking\",\"condition\":\"Good\"},{\"id\":\"td_4\",\"name\":\"Steering\\/Alignment\",\"condition\":\"Good\"},{\"id\":\"td_5\",\"name\":\"Transmission Shifting\",\"condition\":\"Good\"}]},{\"name\":\"Exterior Inspection\",\"items\":[{\"id\":\"ext_1\",\"name\":\"Paint Finish\",\"condition\":\"Good\"},{\"id\":\"ext_2\",\"name\":\"Body Damage\",\"condition\":\"Good\"},{\"id\":\"ext_3\",\"name\":\"Rust\",\"condition\":\"Good\"},{\"id\":\"ext_4\",\"name\":\"Windshield\\/Glass\",\"condition\":\"Good\"},{\"id\":\"ext_5\",\"name\":\"Headlights\\/Turn Signals\",\"condition\":\"Good\"}]},{\"name\":\"Electrical System\",\"items\":[{\"id\":\"elec_1\",\"name\":\"Battery\",\"condition\":\"Good\"},{\"id\":\"elec_2\",\"name\":\"Instrument Gauges\",\"condition\":\"Good\"},{\"id\":\"elec_3\",\"name\":\"Air Conditioning\",\"condition\":\"Good\"},{\"id\":\"elec_4\",\"name\":\"Heater Operation\",\"condition\":\"Good\"},{\"id\":\"elec_5\",\"name\":\"Wiper System\",\"condition\":\"Good\"}]},{\"name\":\"Under The Hood\",\"items\":[{\"id\":\"uth_1\",\"name\":\"Fluid Levels\",\"condition\":\"Good\"},{\"id\":\"uth_2\",\"name\":\"Hoses\",\"condition\":\"Good\"},{\"id\":\"uth_3\",\"name\":\"Belts\",\"condition\":\"Good\"},{\"id\":\"uth_4\",\"name\":\"Air Filter\",\"condition\":\"Good\"},{\"id\":\"uth_5\",\"name\":\"Radiator\",\"condition\":\"Good\"}]}],\"status\":\"in-progress\"}', 'Inspection data updated', '192.168.100.12', '2026-02-12 07:18:26'),
+(3, 23, 'INSPECTION_UPDATED', 'inspection', 1, NULL, '{\"summary\":\"nothing \",\"overall_condition\":\"good\",\"checklist_data\":[{\"name\":\"Test Drive\",\"items\":[{\"id\":\"td_1\",\"name\":\"Engine Performance\",\"condition\":\"Good\"},{\"id\":\"td_2\",\"name\":\"Road Handling\",\"condition\":\"Good\"},{\"id\":\"td_3\",\"name\":\"Braking\",\"condition\":\"Good\"},{\"id\":\"td_4\",\"name\":\"Steering\\/Alignment\",\"condition\":\"Good\"},{\"id\":\"td_5\",\"name\":\"Transmission Shifting\",\"condition\":\"Good\"}]},{\"name\":\"Exterior Inspection\",\"items\":[{\"id\":\"ext_1\",\"name\":\"Paint Finish\",\"condition\":\"Good\"},{\"id\":\"ext_2\",\"name\":\"Body Damage\",\"condition\":\"Good\"},{\"id\":\"ext_3\",\"name\":\"Rust\",\"condition\":\"Good\"},{\"id\":\"ext_4\",\"name\":\"Windshield\\/Glass\",\"condition\":\"Good\"},{\"id\":\"ext_5\",\"name\":\"Headlights\\/Turn Signals\",\"condition\":\"Good\"}]},{\"name\":\"Electrical System\",\"items\":[{\"id\":\"elec_1\",\"name\":\"Battery\",\"condition\":\"Good\"},{\"id\":\"elec_2\",\"name\":\"Instrument Gauges\",\"condition\":\"Good\"},{\"id\":\"elec_3\",\"name\":\"Air Conditioning\",\"condition\":\"Good\"},{\"id\":\"elec_4\",\"name\":\"Heater Operation\",\"condition\":\"Good\"},{\"id\":\"elec_5\",\"name\":\"Wiper System\",\"condition\":\"Good\"}]},{\"name\":\"Under The Hood\",\"items\":[{\"id\":\"uth_1\",\"name\":\"Fluid Levels\",\"condition\":\"Good\"},{\"id\":\"uth_2\",\"name\":\"Hoses\",\"condition\":\"Good\"},{\"id\":\"uth_3\",\"name\":\"Belts\",\"condition\":\"Good\"},{\"id\":\"uth_4\",\"name\":\"Air Filter\",\"condition\":\"Good\"},{\"id\":\"uth_5\",\"name\":\"Radiator\",\"condition\":\"Good\"}]}],\"status\":\"in-progress\"}', 'Inspection data updated', '192.168.100.12', '2026-02-12 07:18:42'),
+(4, 23, 'INSPECTION_UPDATED', 'inspection', 1, NULL, '{\"summary\":\"nothing \",\"overall_condition\":\"good\",\"checklist_data\":[{\"name\":\"Test Drive\",\"items\":[{\"id\":\"td_1\",\"name\":\"Engine Performance\",\"condition\":\"Good\"},{\"id\":\"td_2\",\"name\":\"Road Handling\",\"condition\":\"Good\"},{\"id\":\"td_3\",\"name\":\"Braking\",\"condition\":\"Good\"},{\"id\":\"td_4\",\"name\":\"Steering\\/Alignment\",\"condition\":\"Good\"},{\"id\":\"td_5\",\"name\":\"Transmission Shifting\",\"condition\":\"Good\"}]},{\"name\":\"Exterior Inspection\",\"items\":[{\"id\":\"ext_1\",\"name\":\"Paint Finish\",\"condition\":\"Good\"},{\"id\":\"ext_2\",\"name\":\"Body Damage\",\"condition\":\"Good\"},{\"id\":\"ext_3\",\"name\":\"Rust\",\"condition\":\"Good\"},{\"id\":\"ext_4\",\"name\":\"Windshield\\/Glass\",\"condition\":\"Good\"},{\"id\":\"ext_5\",\"name\":\"Headlights\\/Turn Signals\",\"condition\":\"Good\"}]},{\"name\":\"Electrical System\",\"items\":[{\"id\":\"elec_1\",\"name\":\"Battery\",\"condition\":\"Good\"},{\"id\":\"elec_2\",\"name\":\"Instrument Gauges\",\"condition\":\"Good\"},{\"id\":\"elec_3\",\"name\":\"Air Conditioning\",\"condition\":\"Good\"},{\"id\":\"elec_4\",\"name\":\"Heater Operation\",\"condition\":\"Good\"},{\"id\":\"elec_5\",\"name\":\"Wiper System\",\"condition\":\"Good\"}]},{\"name\":\"Under The Hood\",\"items\":[{\"id\":\"uth_1\",\"name\":\"Fluid Levels\",\"condition\":\"Good\"},{\"id\":\"uth_2\",\"name\":\"Hoses\",\"condition\":\"Good\"},{\"id\":\"uth_3\",\"name\":\"Belts\",\"condition\":\"Good\"},{\"id\":\"uth_4\",\"name\":\"Air Filter\",\"condition\":\"Good\"},{\"id\":\"uth_5\",\"name\":\"Radiator\",\"condition\":\"Good\"}]}],\"status\":\"in-progress\"}', 'Inspection data updated', '192.168.100.12', '2026-02-12 07:19:07'),
+(5, 23, 'INSPECTION_UPDATED', 'inspection', 1, NULL, '{\"summary\":\"nothing \",\"overall_condition\":\"Good\",\"checklist_data\":[{\"name\":\"Test Drive\",\"items\":[{\"id\":\"td_1\",\"name\":\"Engine Performance\",\"condition\":\"Good\"},{\"id\":\"td_2\",\"name\":\"Road Handling\",\"condition\":\"Good\"},{\"id\":\"td_3\",\"name\":\"Braking\",\"condition\":\"Good\"},{\"id\":\"td_4\",\"name\":\"Steering\\/Alignment\",\"condition\":\"Good\"},{\"id\":\"td_5\",\"name\":\"Transmission Shifting\",\"condition\":\"Good\"}]},{\"name\":\"Exterior Inspection\",\"items\":[{\"id\":\"ext_1\",\"name\":\"Paint Finish\",\"condition\":\"Good\"},{\"id\":\"ext_2\",\"name\":\"Body Damage\",\"condition\":\"Good\"},{\"id\":\"ext_3\",\"name\":\"Rust\",\"condition\":\"Good\"},{\"id\":\"ext_4\",\"name\":\"Windshield\\/Glass\",\"condition\":\"Good\"},{\"id\":\"ext_5\",\"name\":\"Headlights\\/Turn Signals\",\"condition\":\"Good\"}]},{\"name\":\"Electrical System\",\"items\":[{\"id\":\"elec_1\",\"name\":\"Battery\",\"condition\":\"Good\"},{\"id\":\"elec_2\",\"name\":\"Instrument Gauges\",\"condition\":\"Good\"},{\"id\":\"elec_3\",\"name\":\"Air Conditioning\",\"condition\":\"Good\"},{\"id\":\"elec_4\",\"name\":\"Heater Operation\",\"condition\":\"Good\"},{\"id\":\"elec_5\",\"name\":\"Wiper System\",\"condition\":\"Good\"}]},{\"name\":\"Under The Hood\",\"items\":[{\"id\":\"uth_1\",\"name\":\"Fluid Levels\",\"condition\":\"Good\"},{\"id\":\"uth_2\",\"name\":\"Hoses\",\"condition\":\"Good\"},{\"id\":\"uth_3\",\"name\":\"Belts\",\"condition\":\"Good\"},{\"id\":\"uth_4\",\"name\":\"Air Filter\",\"condition\":\"Good\"},{\"id\":\"uth_5\",\"name\":\"Radiator\",\"condition\":\"Good\"}]}],\"status\":\"in-progress\"}', 'Inspection data updated', '192.168.100.12', '2026-02-12 07:20:32'),
+(6, 23, 'INSPECTION_UPDATED', 'inspection', 1, NULL, '{\"summary\":\"nothing \",\"overall_condition\":\"good\",\"checklist_data\":[{\"name\":\"Test Drive\",\"items\":[{\"id\":\"td_1\",\"name\":\"Engine Performance\",\"condition\":\"Good\"},{\"id\":\"td_2\",\"name\":\"Road Handling\",\"condition\":\"Good\"},{\"id\":\"td_3\",\"name\":\"Braking\",\"condition\":\"Good\"},{\"id\":\"td_4\",\"name\":\"Steering\\/Alignment\",\"condition\":\"Good\"},{\"id\":\"td_5\",\"name\":\"Transmission Shifting\",\"condition\":\"Good\"}]},{\"name\":\"Exterior Inspection\",\"items\":[{\"id\":\"ext_1\",\"name\":\"Paint Finish\",\"condition\":\"Good\"},{\"id\":\"ext_2\",\"name\":\"Body Damage\",\"condition\":\"Good\"},{\"id\":\"ext_3\",\"name\":\"Rust\",\"condition\":\"Good\"},{\"id\":\"ext_4\",\"name\":\"Windshield\\/Glass\",\"condition\":\"Good\"},{\"id\":\"ext_5\",\"name\":\"Headlights\\/Turn Signals\",\"condition\":\"Good\"}]},{\"name\":\"Electrical System\",\"items\":[{\"id\":\"elec_1\",\"name\":\"Battery\",\"condition\":\"Good\"},{\"id\":\"elec_2\",\"name\":\"Instrument Gauges\",\"condition\":\"Good\"},{\"id\":\"elec_3\",\"name\":\"Air Conditioning\",\"condition\":\"Good\"},{\"id\":\"elec_4\",\"name\":\"Heater Operation\",\"condition\":\"Good\"},{\"id\":\"elec_5\",\"name\":\"Wiper System\",\"condition\":\"Good\"}]},{\"name\":\"Under The Hood\",\"items\":[{\"id\":\"uth_1\",\"name\":\"Fluid Levels\",\"condition\":\"Good\"},{\"id\":\"uth_2\",\"name\":\"Hoses\",\"condition\":\"Good\"},{\"id\":\"uth_3\",\"name\":\"Belts\",\"condition\":\"Good\"},{\"id\":\"uth_4\",\"name\":\"Air Filter\",\"condition\":\"Good\"},{\"id\":\"uth_5\",\"name\":\"Radiator\",\"condition\":\"Good\"}]}],\"status\":\"in-progress\"}', 'Inspection data updated', '192.168.100.12', '2026-02-12 07:41:16'),
+(7, 23, 'INSPECTION_UPDATED', 'inspection', 1, NULL, '{\"summary\":\"nothing \",\"overall_condition\":\"good\",\"checklist_data\":[{\"name\":\"Test Drive\",\"items\":[{\"id\":\"td_1\",\"name\":\"Engine Performance\",\"condition\":\"Good\"},{\"id\":\"td_2\",\"name\":\"Road Handling\",\"condition\":\"Good\"},{\"id\":\"td_3\",\"name\":\"Braking\",\"condition\":\"Good\"},{\"id\":\"td_4\",\"name\":\"Steering\\/Alignment\",\"condition\":\"Good\"},{\"id\":\"td_5\",\"name\":\"Transmission Shifting\",\"condition\":\"Good\"}]},{\"name\":\"Exterior Inspection\",\"items\":[{\"id\":\"ext_1\",\"name\":\"Paint Finish\",\"condition\":\"Good\"},{\"id\":\"ext_2\",\"name\":\"Body Damage\",\"condition\":\"Good\"},{\"id\":\"ext_3\",\"name\":\"Rust\",\"condition\":\"Good\"},{\"id\":\"ext_4\",\"name\":\"Windshield\\/Glass\",\"condition\":\"Good\"},{\"id\":\"ext_5\",\"name\":\"Headlights\\/Turn Signals\",\"condition\":\"Good\"}]},{\"name\":\"Electrical System\",\"items\":[{\"id\":\"elec_1\",\"name\":\"Battery\",\"condition\":\"Good\"},{\"id\":\"elec_2\",\"name\":\"Instrument Gauges\",\"condition\":\"Good\"},{\"id\":\"elec_3\",\"name\":\"Air Conditioning\",\"condition\":\"Good\"},{\"id\":\"elec_4\",\"name\":\"Heater Operation\",\"condition\":\"Good\"},{\"id\":\"elec_5\",\"name\":\"Wiper System\",\"condition\":\"Good\"}]},{\"name\":\"Under The Hood\",\"items\":[{\"id\":\"uth_1\",\"name\":\"Fluid Levels\",\"condition\":\"Good\"},{\"id\":\"uth_2\",\"name\":\"Hoses\",\"condition\":\"Good\"},{\"id\":\"uth_3\",\"name\":\"Belts\",\"condition\":\"Good\"},{\"id\":\"uth_4\",\"name\":\"Air Filter\",\"condition\":\"Good\"},{\"id\":\"uth_5\",\"name\":\"Radiator\",\"condition\":\"Good\"}]}],\"status\":\"in-progress\"}', 'Inspection data updated', '192.168.100.12', '2026-02-12 07:42:07'),
+(8, 23, 'INSPECTION_UPDATED', 'inspection', 1, NULL, '{\"summary\":\"nothing \",\"overall_condition\":\"good\",\"checklist_data\":[{\"name\":\"Test Drive\",\"items\":[{\"id\":\"td_1\",\"name\":\"Engine Performance\",\"condition\":\"Good\"},{\"id\":\"td_2\",\"name\":\"Road Handling\",\"condition\":\"Good\"},{\"id\":\"td_3\",\"name\":\"Braking\",\"condition\":\"Good\"},{\"id\":\"td_4\",\"name\":\"Steering\\/Alignment\",\"condition\":\"Good\"},{\"id\":\"td_5\",\"name\":\"Transmission Shifting\",\"condition\":\"Good\"}]},{\"name\":\"Exterior Inspection\",\"items\":[{\"id\":\"ext_1\",\"name\":\"Paint Finish\",\"condition\":\"Good\"},{\"id\":\"ext_2\",\"name\":\"Body Damage\",\"condition\":\"Good\"},{\"id\":\"ext_3\",\"name\":\"Rust\",\"condition\":\"Good\"},{\"id\":\"ext_4\",\"name\":\"Windshield\\/Glass\",\"condition\":\"Good\"},{\"id\":\"ext_5\",\"name\":\"Headlights\\/Turn Signals\",\"condition\":\"Good\"}]},{\"name\":\"Electrical System\",\"items\":[{\"id\":\"elec_1\",\"name\":\"Battery\",\"condition\":\"Good\"},{\"id\":\"elec_2\",\"name\":\"Instrument Gauges\",\"condition\":\"Good\"},{\"id\":\"elec_3\",\"name\":\"Air Conditioning\",\"condition\":\"Good\"},{\"id\":\"elec_4\",\"name\":\"Heater Operation\",\"condition\":\"Good\"},{\"id\":\"elec_5\",\"name\":\"Wiper System\",\"condition\":\"Good\"}]},{\"name\":\"Under The Hood\",\"items\":[{\"id\":\"uth_1\",\"name\":\"Fluid Levels\",\"condition\":\"Good\"},{\"id\":\"uth_2\",\"name\":\"Hoses\",\"condition\":\"Good\"},{\"id\":\"uth_3\",\"name\":\"Belts\",\"condition\":\"Good\"},{\"id\":\"uth_4\",\"name\":\"Air Filter\",\"condition\":\"Good\"},{\"id\":\"uth_5\",\"name\":\"Radiator\",\"condition\":\"Good\"}]}],\"status\":\"in-progress\"}', 'Inspection data updated', '192.168.100.12', '2026-02-12 07:46:09'),
+(9, 23, 'INSPECTION_SUBMITTED', 'inspection', 1, NULL, NULL, 'Inspection submitted for review', '192.168.100.12', '2026-02-12 07:57:48');
 
 -- --------------------------------------------------------
 
@@ -1315,7 +1359,8 @@ ALTER TABLE `inspections`
   ADD KEY `ticket_id` (`ticket_id`),
   ADD KEY `technician_id` (`technician_id`),
   ADD KEY `vehicle_id` (`vehicle_id`),
-  ADD KEY `station_id` (`station_id`);
+  ADD KEY `station_id` (`station_id`),
+  ADD KEY `fk_inspection_conversion` (`conversion_id`);
 
 --
 -- Indexes for table `inspection_photos`
@@ -1708,7 +1753,7 @@ ALTER TABLE `FuelPrices`
 -- AUTO_INCREMENT for table `inspections`
 --
 ALTER TABLE `inspections`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `inspection_photos`
@@ -1738,13 +1783,13 @@ ALTER TABLE `KeyAccountFuelPrices`
 -- AUTO_INCREMENT for table `KeyAccounts`
 --
 ALTER TABLE `KeyAccounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `key_account_ledger`
 --
 ALTER TABLE `key_account_ledger`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `leave_types`
@@ -1834,7 +1879,7 @@ ALTER TABLE `Regions`
 -- AUTO_INCREMENT for table `sales`
 --
 ALTER TABLE `sales`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `service_approvals`
@@ -1846,7 +1891,7 @@ ALTER TABLE `service_approvals`
 -- AUTO_INCREMENT for table `shifts`
 --
 ALTER TABLE `shifts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `shift_reconciliation`
@@ -1882,7 +1927,7 @@ ALTER TABLE `stores`
 -- AUTO_INCREMENT for table `technical_logs`
 --
 ALTER TABLE `technical_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `tickets`
@@ -1923,6 +1968,7 @@ ALTER TABLE `FuelPrices`
 -- Constraints for table `inspections`
 --
 ALTER TABLE `inspections`
+  ADD CONSTRAINT `fk_inspection_conversion` FOREIGN KEY (`conversion_id`) REFERENCES `conversions` (`id`),
   ADD CONSTRAINT `inspections_ibfk_1` FOREIGN KEY (`ticket_id`) REFERENCES `tickets` (`id`),
   ADD CONSTRAINT `inspections_ibfk_2` FOREIGN KEY (`technician_id`) REFERENCES `staff` (`id`),
   ADD CONSTRAINT `inspections_ibfk_3` FOREIGN KEY (`vehicle_id`) REFERENCES `Vehicles` (`id`),

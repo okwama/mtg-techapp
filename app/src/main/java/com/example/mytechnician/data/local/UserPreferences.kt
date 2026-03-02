@@ -35,10 +35,10 @@ class UserPreferences(private val context: Context) {
         }
     }
     
-    suspend fun saveAuthData(token: String, user: User) {
+    suspend fun saveAuthData(token: String? = null, user: User? = null) {
         context.dataStore.edit { preferences ->
-            preferences[TOKEN_KEY] = token
-            preferences[USER_KEY] = Json.encodeToString(user)
+            token?.let { preferences[TOKEN_KEY] = it }
+            user?.let { preferences[USER_KEY] = Json.encodeToString(it) }
         }
     }
     

@@ -12,4 +12,12 @@ class Controller {
     protected function getPostData() {
         return json_decode(file_get_contents("php://input"), true);
     }
+
+    protected function getUserId() {
+        return $_REQUEST['user']['user_id'] ?? null;
+    }
+
+    protected function getUserRole() {
+        return $_REQUEST['user']['role'] ?? null;
+    }
 }

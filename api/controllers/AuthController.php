@@ -27,10 +27,13 @@ class AuthController extends Controller {
         $user = $stmt->fetch();
 
         if ($user && password_verify($data['password'], $user['password'])) {
+            $rememberMe = $data['remember_me'] ?? false;
+            $expiration = $rememberMe ? (365 * 24 * 60 * 60) : (24 * 60 * 60);
+
             $payload = [
                 'user_id' => $user['id'],
                 'role' => $user['role'],
-                'exp' => time() + (24 * 60 * 60) // 24 hours
+                'exp' => time() + $expiration
             ];
 
             $token = JWT::encode($payload);
@@ -46,6 +49,38 @@ class AuthController extends Controller {
             ]);
         } else {
             $this->jsonResponse(['message' => 'Invalid credentials'], 401);
+        }
+    }
+
+    public function getProfile() {
+        $userId = $this->getUserId();
+        
+        $query = "SELECT s.id, s.name, s.phone_number, s.role, s.business_email, s.station_id, st.name as station_name 
+                  FROM staff s 
+                  LEFT JOIN Stations st ON s.station_id = st.id 
+                  WHERE s.id = ? 
+                  LIMIT 0,1";
+        
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(1, $userId);
+        $stmt->execute();
+        $user = $stmt->fetch();
+
+        if ($user) {
+            $this->jsonResponse([
+                'success' => true,
+                'data' => [
+                    'id' => (int)$user['id'],
+                    'name' => $user['name'],
+                    'phone_number' => $user['phone_number'],
+                    'role' => $user['role'],
+                    'business_email' => $user['business_email'],
+                    'station_id' => $user['station_id'] ? (int)$user['station_id'] : null,
+                    'station_name' => $user['station_name']
+                ]
+            ]);
+        } else {
+            $this->jsonResponse(['message' => 'User not found'], 404);
         }
     }
 }

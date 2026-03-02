@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
     // TODO: Replace with your actual API base URL
-    private const val BASE_URL = "http://10.0.2.2/api/" // Android emulator localhost
+    private const val BASE_URL = "http://192.168.100.4:3000/" // Local API address
     
     private val json = Json {
         ignoreUnknownKeys = true
@@ -20,9 +20,20 @@ object RetrofitClient {
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
+
+    var authToken: String? = null
+    
+    private val authInterceptor = okhttp3.Interceptor { chain ->
+        val request = chain.request().newBuilder()
+        authToken?.let {
+            request.addHeader("Authorization", "Bearer $it")
+        }
+        chain.proceed(request.build())
+    }
     
     private val okHttpClient = OkHttpClient.Builder()
         .addInterceptor(loggingInterceptor)
+        .addInterceptor(authInterceptor)
         .connectTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
         .writeTimeout(30, TimeUnit.SECONDS)
@@ -35,4 +46,8 @@ object RetrofitClient {
         .build()
     
     val authApi: AuthApi = retrofit.create(AuthApi::class.java)
+    val inspectionApi: InspectionApi = retrofit.create(InspectionApi::class.java)
+    val shiftApi: ShiftApi = retrofit.create(ShiftApi::class.java)
+    val partApi: PartApi = retrofit.create(PartApi::class.java)
+    val serviceApi: ServiceApi = retrofit.create(ServiceApi::class.java)
 }
